@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package bookstore.v1;
+
+// 指定 go 的包路径及包名
+// option go_package="app/services;services";
+// 指定 php 的命名空间
+// option php_namespace="App\\Services";
+option go_package="api/bookstore/v1";
+
+// type Store interface {
+// 	Create(*Book) error       // 创建一个新图书条目
+// 	Update(*Book) error       // 更新某图书条目
+// 	Get(string) (Book, error) // 获取某图书信息
+// 	GetAll() ([]Book, error)  // 获取所有图书信息
+// 	Delete(string) error      // 删除某图书条目
+// }
+
+
+service Bookstore {
+    rpc CreateBook (BookRequest)  returns (BookResp) {}
+    rpc GetBook (GetABookReq)     returns (GetABookResp) {}
+    rpc GetAllBook(GetAllBookReq) returns (GetAllBookResp) {}
+}
+
+message BookEntity {
+    int32 id = 1;
+    string name = 2;
+    repeated string authors = 3;
+    string press = 4;
+}
+
+message BookRequest {
+    BookEntity bookReq = 1;
+}
+
+message BookResp{
+    int32 err = 1;
+    string msg = 2;
+}
+
+message GetABookReq  {
+    int32 id = 1;
+}
+
+message GetABookResp {
+    int32 err = 1;
+    string msg = 2;
+    BookEntity book = 3;// 返回一本书
+}
+
+message GetAllBookReq {}
+
+message GetAllBookResp{
+    int32 err = 1;
+    string msg = 2;
+    repeated BookEntity books = 3; // 返回所有本书
+}
+
+// protoc -I. --go_out=plugins=grpc:./user bookstore.proto
